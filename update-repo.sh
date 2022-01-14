@@ -1,6 +1,6 @@
 #!/bin/bash
 
-MONGODB_VERSION=4.4
+MONGODB_VERSION=5.0
 DOCKER_USERNAME=suitespot
 
 curl -O --remote-name-all https://raw.githubusercontent.com/docker-library/mongo/master/$MONGODB_VERSION/{Dockerfile,docker-entrypoint.sh}
