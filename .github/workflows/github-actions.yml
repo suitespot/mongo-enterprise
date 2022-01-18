@@ -1,12 +1,11 @@
-name: Build docker image for arch arm64 needed for mac M1
+name: Build docker image for multiple architectures, arm64 (for mac M1) and amd
 
 # Trigger github-action when pushed git tag matches:
-# digit.digit.digit-arm64,
-# for example: 1.0.3-arm64
+# "digit.digit.digit" for example: 1.0.3
 on:
   push:
     tags:
-      - "[0-9]+.[0-9]+.[0-9]+-arm64"
+      - "[0-9]+.[0-9]+.[0-9]"
 
 jobs:
   docker:
