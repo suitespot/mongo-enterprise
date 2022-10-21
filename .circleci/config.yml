@@ -12,8 +12,11 @@ jobs:
           name: Build application Docker image
           command: |
             docker login -u ${DOCKERHUB_USERNAME} -p ${DOCKERHUB_PASSWORD}
-            docker buildx create --use
-            docker buildx build . --platform linux/arm64,linux/amd64 -t suitespottechnology/mongo-enterprise:latest --push
+            docker context ls
+            docker buildx create --name mybuilder --use
+            docker buildx ls
+            # linux/arm/v7,linux/arm64/v8,
+            docker buildx build . --platform linux/amd64 -t suitespottechnology/mongo-enterprise:latest --push
 
 workflows:
   version: 2
