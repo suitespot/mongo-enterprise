@@ -17,12 +17,12 @@ RUN set -eux; \
 	apt-get update; \
 	apt-get install -y --no-install-recommends \
 		ca-certificates \
+		dirmngr \
+		gnupg \
 		jq \
 		numactl \
+		procps \
 	; \
-	if ! command -v ps > /dev/null; then \
-		apt-get install -y --no-install-recommends procps; \
-	fi; \
 	rm -rf /var/lib/apt/lists/*
 
 # grab gosu for easy step-down from root (https://github.com/tianon/gosu/releases)
@@ -37,13 +37,6 @@ RUN set -ex; \
 	apt-get install -y --no-install-recommends \
 		wget \
 	; \
-	if ! command -v gpg > /dev/null; then \
-		apt-get install -y --no-install-recommends gnupg dirmngr; \
-		savedAptMark="$savedAptMark gnupg dirmngr"; \
-	elif gpg --version | grep -q '^gpg (GnuPG) 1\.'; then \
-# "This package provides support for HKPS keyservers." (GnuPG 1.x only)
-		apt-get install -y --no-install-recommends gnupg-curl; \
-	fi; \
 	rm -rf /var/lib/apt/lists/*; \
 	\
 	dpkgArch="$(dpkg --print-architecture | awk -F- '{ print $NF }')"; \
@@ -52,8 +45,8 @@ RUN set -ex; \
 	export GNUPGHOME="$(mktemp -d)"; \
 	gpg --batch --keyserver hkps://keys.openpgp.org --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4; \
 	gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu; \
-	command -v gpgconf && gpgconf --kill all || :; \
-	rm -r "$GNUPGHOME" /usr/local/bin/gosu.asc; \
+	gpgconf --kill all; \
+	rm -rf "$GNUPGHOME" /usr/local/bin/gosu.asc; \
 	\
 	wget -O /js-yaml.js "https://github.com/nodeca/js-yaml/raw/${JSYAML_VERSION}/dist/js-yaml.js"; \
 # TODO some sort of download verification here
@@ -77,8 +70,8 @@ RUN set -ex; \
 	done; \
 	mkdir -p /etc/apt/keyrings; \
 	gpg --batch --export "$@" > /etc/apt/keyrings/mongodb.gpg; \
-	command -v gpgconf && gpgconf --kill all || :; \
-	rm -r "$GNUPGHOME"
+	gpgconf --kill all; \
+	rm -rf "$GNUPGHOME"
 
 # Allow build-time overrides (eg. to build image with MongoDB Enterprise version)
 # Options for MONGO_PACKAGE: mongodb-org OR mongodb-enterprise
@@ -92,8 +85,8 @@ ENV MONGO_MAJOR 6.0
 RUN echo "deb [ signed-by=/etc/apt/keyrings/mongodb.gpg ] http://$MONGO_REPO/apt/ubuntu focal/${MONGO_PACKAGE%-unstable}/$MONGO_MAJOR multiverse" | tee "/etc/apt/sources.list.d/${MONGO_PACKAGE%-unstable}.list"
 
 # https://docs.mongodb.org/master/release-notes/6.0/
-ENV MONGO_VERSION 6.0.2
-# 09/29/2022, https://github.com/mongodb/mongo/tree/94fb7dfc8b974f1f5343e7ea394d0d9deedba50e
+ENV MONGO_VERSION 6.0.3
+# 11/14/2022, https://github.com/mongodb/mongo/tree/f803681c3ae19817d31958965850193de067c516
 
 RUN set -x \
 # installing "mongodb-enterprise" pulls in "tzdata" which prompts for input
