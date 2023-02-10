@@ -1,7 +1,7 @@
 #!/bin/bash
 
 MONGO_MAJOR=6.0
-MONGO_VERSION=6.0.3
+MONGO_VERSION=6.0.4
 
 DOCKER_USERNAME=suitespottechnology
 
