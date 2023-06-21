@@ -6,7 +6,7 @@
 #   ./update-repo.sh --push
 
 MONGO_MAJOR=6.0
-MONGO_VERSION=6.0.4
+MONGO_VERSION=6.0.6
 
 DOCKER_USERNAME=suitespottechnology
 

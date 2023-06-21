@@ -43,7 +43,9 @@ case "$dpkgArch" in
 		if ! grep -qE '^Features.* (fphp|dcpop|sha3|sm3|sm4|asimddp|sha512|sve)( .*|$)' /proc/cpuinfo; then
 			{
 				echo
-				echo 'WARNING: MongoDB 5.0+ requires ARMv8.2-A or higher, and your current system does not appear to implement any of the common features for that!'
+				echo 'WARNING: MongoDB requires ARMv8.2-A or higher, and your current system does not appear to implement any of the common features for that!'
+				echo '  applies to all versions ≥5.0, any of 4.4 ≥4.4.19'
+				echo '  see https://jira.mongodb.org/browse/SERVER-71772'
 				echo '  see https://jira.mongodb.org/browse/SERVER-55178'
 				echo '  see also https://en.wikichip.org/wiki/arm/armv8#ARMv8_Extensions_and_Processor_Features'
 				echo '  see also https://github.com/docker-library/mongo/issues/485#issuecomment-970864306'
@@ -341,7 +343,7 @@ if [ "$originalArgOne" = 'mongod' ]; then
 
 		mongo=( "$mongoShell" --host 127.0.0.1 --port 27017 --quiet )
 
-		# check to see that our "mongod" actually did start up (catches "--help", "--version", MongoDB 3.2 being silly, slow prealloc, etc)
+		# check to see that our "mongod" actually did start up (catches "--help", "--version", slow prealloc, etc)
 		# https://jira.mongodb.org/browse/SERVER-16292
 		tries=30
 		while true; do
@@ -398,7 +400,7 @@ if [ "$originalArgOne" = 'mongod' ]; then
 		echo
 	fi
 
-	# MongoDB 3.6+ defaults to localhost-only binding
+	# MongoDB defaults to localhost-only binding
 	haveBindIp=
 	if _mongod_hack_have_arg --bind_ip "$@" || _mongod_hack_have_arg --bind_ip_all "$@"; then
 		haveBindIp=1
