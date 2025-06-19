@@ -1,12 +1,28 @@
 #!/bin/bash
 
-# USAGE: 
-# Change MONGO_MAJOR and MONGO_VERSION to desired a version.
-# To build locally and push to repository, run:
-#   ./update-repo.sh --push
+# USAGE:
+# 1. Change MONGO_MAJOR and MONGO_VERSION to the desired version.
+# 2. To build locally and optionally push to a registry, run:
+#      ./update-repo.sh [--push]
+#
+# Multi-platform tip:
+# If you see “ERROR: Multi-platform build is not supported for the docker driver”,
+# switch to a BuildKit builder that uses the containerd image store:
+#
+#   # Create and select a containerd-backed builder
+#   docker buildx create --name multiarch --driver docker-container --use
+#
+#   # Bootstrap it (starts BuildKit and detects QEMU emulators)
+#   docker buildx inspect --bootstrap
+#
+# (If you’re on a fresh Linux host, you may also need:
+#   docker run --privileged --rm tonistiigi/binfmt --install all
+# )
+#
+# ---------------------------------------------------------------------
 
-MONGO_MAJOR=6.0
-MONGO_VERSION=6.0.6
+MONGO_MAJOR=7.0
+MONGO_VERSION=7.0.21
 
 DOCKER_USERNAME=suitespottechnology
 
