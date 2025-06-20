@@ -21,8 +21,8 @@
 #
 # ---------------------------------------------------------------------
 
-MONGO_MAJOR=7.0
-MONGO_VERSION=7.0.21
+MONGO_MAJOR=8.0
+MONGO_VERSION=8.0.10
 
 DOCKER_USERNAME=suitespottechnology
 
